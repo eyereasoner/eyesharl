@@ -2,17 +2,19 @@
   "name": "eyesharl",
   "version": "0.0.1",
   "description": "A JavaScript implementation of SHACL Rules, including SRL and RDF Rules syntax front-ends.",
+  "keywords": [
+    "SRL",
+    "reasoner"
+  ],
   "license": "MIT",
+  "author": "Jos De Roo",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eyereasoner/eyesharl.git"
+  },
+  "homepage": "https://github.com/eyereasoner/eyesharl#readme",
   "bin": {
     "eyesharl": "./eyesharl.js"
-  },
-  "scripts": {
-    "bundle": "node tools/bundle.js",
-    "test": "node --test test/*.test.js",
-    "pretest": "node tools/bundle.js"
-  },
-  "engines": {
-    "node": ">=18"
   },
   "files": [
     "LICENSE.md",
@@ -23,5 +25,15 @@
     "tools",
     "test",
     "examples"
-  ]
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "node tools/bundle.js",
+    "pretest": "node tools/bundle.js",
+    "test": "node --test test/*.test.js",
+    "preversion": "npm test",
+    "postversion": "git push origin HEAD --follow-tags"
+  }
 }
