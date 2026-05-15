@@ -14,7 +14,7 @@
   },
   "homepage": "https://github.com/eyereasoner/eyesharl#readme",
   "bin": {
-    "eyesharl": "./eyesharl.js"
+    "eyesharl": "eyesharl.js"
   },
   "files": [
     "LICENSE.md",
@@ -35,5 +35,8 @@
     "test": "node --test test/*.test.js",
     "preversion": "npm test",
     "postversion": "git push origin HEAD --follow-tags"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

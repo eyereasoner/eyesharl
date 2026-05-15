@@ -15,7 +15,22 @@ const {
 } = require('./api.js');
 const { compactIRI } = require('./term.js');
 
-const VERSION = '0.12.0';
+function readPackageVersion() {
+  const candidates = [
+    path.join(__dirname, '..', 'package.json'),
+    path.join(__dirname, 'package.json'),
+  ];
+  for (const filename of candidates) {
+    try {
+      return JSON.parse(fs.readFileSync(filename, 'utf8')).version;
+    } catch (_) {
+      // Try the next location.
+    }
+  }
+  return '0.0.0';
+}
+
+const VERSION = readPackageVersion();
 
 function help() {
   return `eyesharl ${VERSION}\n\nA dependency-free JavaScript implementation experiment for the SHACL 1.2 Rules draft, including SRL and RDF Rules syntax front-ends.\n\nUsage:\n  eyesharl [options] [file ...]\n\nOptions:\n  --all                 Print the full closure, including input facts\n  --json                Print JSON instead of compact triples/bindings\n  --trace               Print derivation trace to stderr, or include it in JSON\n  --stats               Print iteration and triple counts to stderr\n  --check               Parse and analyze only; do not run rules\n  --strict              Treat static warnings as errors\n  --deps                Print rule dependency edges during --check\n  --query TEXT          Run a raw SRL body pattern over the closure\n  --query-file FILE     Read a raw SRL body pattern from a file\n  --max-iterations N    Stop after N fixpoint iterations within a recursive layer\n  --no-imports          Parse IMPORTS/owl:imports but do not load imported rule sets\n  --syntax MODE         Use srl, rdf, or auto syntax detection (default auto)\n  --ruleset TERM        In RDF syntax, run only the selected srl:RuleSet\n  --version             Print version\n  -h, --help            Print this help\n\nWith no file arguments, eyesharl reads from stdin.\n`;
