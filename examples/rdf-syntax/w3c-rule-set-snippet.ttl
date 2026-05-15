@@ -1,0 +1,40 @@
+# Adapted from the W3C data-shapes gh-pages rules-rdf-syntax/test-rules.ttl file.
+PREFIX : <http://example/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX srl: <http://www.w3.org/ns/shacl-rules#>
+PREFIX shnex: <http://www.w3.org/ns/shacl-node-expr#>
+PREFIX sparql: <http://www.w3.org/ns/sparql#>
+
+:ruleSet-1 a srl:RuleSet ;
+  srl:data (
+    [ srl:subject :s ; srl:predicate :p ; srl:object :o ]
+    <<( :s1 :p1 :o1 )>>
+  ) ;
+  srl:rules (
+    [ a srl:Rule ;
+      srl:body (
+        [ srl:object :o ; srl:predicate :p ; srl:subject [ srl:varName "x" ] ]
+      ) ;
+      srl:head (
+        [ srl:object :o ; srl:predicate :q ; srl:subject [ srl:varName "x" ] ]
+      )
+    ]
+    [ a srl:Rule ;
+      srl:body (
+        [ srl:object [ srl:varName "o" ] ; srl:predicate :p ; srl:subject [ srl:varName "x" ] ]
+        [ srl:filter [ sparql:less-than ( [ shnex:var "o" ] 18 ) ] ]
+      ) ;
+      srl:head (
+        [ srl:object :young ; srl:predicate :q ; srl:subject [ srl:varName "x" ] ]
+      )
+    ]
+    [ a srl:Rule ;
+      srl:body (
+        [ srl:object :o ; srl:predicate :p ; srl:subject [ srl:varName "x" ] ]
+        [ srl:assign [ srl:assignValue 18 ; srl:assignVar [ srl:varName "o" ] ] ]
+      ) ;
+      srl:head (
+        [ srl:object [ srl:varName "o" ] ; srl:predicate :q ; srl:subject [ srl:varName "x" ] ]
+      )
+    ]
+  ) .

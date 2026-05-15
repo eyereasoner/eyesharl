@@ -1,0 +1,44 @@
+# Captured from the SHACL 1.2 Rules draft section 4.2.
+# This is RDF Rules syntax in Turtle and is executable by Eyesharl.
+
+PREFIX :       <http://example/>
+PREFIX rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX sh:     <http://www.w3.org/ns/shacl#>
+PREFIX srl:    <http://www.w3.org/ns/shacl-rules#>
+PREFIX sparql: <http://www.w3.org/ns/sparql#>
+
+:ruleSet-1
+  rdf:type srl:RuleSet;
+  srl:data (
+    [  srl:subject :x ; srl:predicate :p ; srl:object 1 ]
+    [  srl:subject :x ; srl:predicate :q ; srl:object 2 ]
+  );
+  srl:rules (
+    [
+      rdf:type srl:Rule;
+      srl:head (
+        [ srl:subject [ srl:varName "x" ] ; srl:predicate :bothPositive ; srl:object true ]
+      ) ;
+      srl:body (
+        [ srl:subject [ srl:varName "x" ]; srl:predicate :p ; srl:object [ srl:varName "v1" ] ]
+        [ srl:expr [ sparql:greaterThan ( [ srl:varName "v1" ] 0 ) ] ]
+        [ srl:subject [ srl:varName "x" ] ; srl:predicate :q ; srl:object [ srl:varName "v2" ] ]
+        [ srl:expr [ sparql:greaterThan ( [ srl:varName "v2" ] 0 ) ] ]
+      );
+    ]
+    [
+      rdf:type srl:Rule;
+      srl:head (
+        [ srl:subject [ srl:varName "x" ] ; srl:predicate :oneIsZero ; srl:object true ]
+      ) ;
+      srl:body (
+        [ srl:subject [ srl:varName "x" ] ; srl:predicate :p ; srl:object [ srl:varName "v1" ] ]
+        [ srl:subject [ srl:varName "x" ] ; srl:predicate :q ; srl:object [ srl:varName "v2" ] ]
+        [ srl:filter [ sparql:function-or (
+              [ sparql:equals ( [ srl:varName "v1" ] 0 ) ]
+              [ sparql:equals ( [ srl:varName "v2" ] 0 ) ]
+            ) ]
+        ]
+      );
+    ]
+  ) .

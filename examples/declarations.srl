@@ -1,0 +1,12 @@
+PREFIX : <http://example/>
+
+DATA {
+  :alice :parentOf :bob .
+  :bob :parentOf :carol .
+  :alice :spouseOf :dora .
+  :alice :hasChild :bob .
+}
+
+TRANSITIVE(:parentOf)
+SYMMETRIC(:spouseOf)
+INVERSE(:hasChild, :childOf)

@@ -1,0 +1,27 @@
+PREFIX : <http://example/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX srl: <http://www.w3.org/ns/shacl-rules#>
+PREFIX shnex: <http://www.w3.org/ns/shacl-node-expr#>
+PREFIX sparql: <http://www.w3.org/ns/sparql#>
+
+:scoreRules a srl:RuleSet ;
+  srl:data (
+    [ srl:subject :alice ; srl:predicate :score ; srl:object 7 ]
+    [ srl:subject :bob ; srl:predicate :score ; srl:object 2 ]
+    [ srl:subject :bob ; srl:predicate :blocked ; srl:object true ]
+  ) ;
+  srl:rules (
+    [ a srl:Rule ;
+      srl:body (
+        [ srl:subject [ srl:varName "x" ] ; srl:predicate :score ; srl:object [ srl:varName "score" ] ]
+        [ srl:filter [ sparql:greater-than-or-equal ( [ shnex:var "score" ] 5 ) ] ]
+        [ srl:not (
+          [ srl:subject [ srl:varName "x" ] ; srl:predicate :blocked ; srl:object true ]
+        ) ]
+        [ srl:assign [ srl:assignVar [ srl:varName "label" ] ; srl:assignValue [ sparql:concat ( "score-" [ shnex:var "score" ] ) ] ] ]
+      ) ;
+      srl:head (
+        [ srl:subject [ srl:varName "x" ] ; srl:predicate :label ; srl:object [ srl:varName "label" ] ]
+      )
+    ]
+  ) .

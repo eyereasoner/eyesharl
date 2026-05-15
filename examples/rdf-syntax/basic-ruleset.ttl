@@ -1,0 +1,36 @@
+PREFIX : <http://example/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX srl: <http://www.w3.org/ns/shacl-rules#>
+
+:familyRules a srl:RuleSet ;
+  srl:data (
+    [ srl:subject :alice ; srl:predicate :parentOf ; srl:object :bob ]
+    [ srl:subject :bob ; srl:predicate :parentOf ; srl:object :carol ]
+  ) ;
+  srl:rules (
+    [ a srl:Rule ;
+      srl:body (
+        [ srl:subject [ srl:varName "x" ] ; srl:predicate :parentOf ; srl:object [ srl:varName "y" ] ]
+      ) ;
+      srl:head (
+        [ srl:subject [ srl:varName "y" ] ; srl:predicate :childOf ; srl:object [ srl:varName "x" ] ]
+      )
+    ]
+    [ a srl:Rule ;
+      srl:body (
+        [ srl:subject [ srl:varName "x" ] ; srl:predicate :parentOf ; srl:object [ srl:varName "y" ] ]
+      ) ;
+      srl:head (
+        [ srl:subject [ srl:varName "x" ] ; srl:predicate :ancestorOf ; srl:object [ srl:varName "y" ] ]
+      )
+    ]
+    [ a srl:Rule ;
+      srl:body (
+        [ srl:subject [ srl:varName "x" ] ; srl:predicate :parentOf ; srl:object [ srl:varName "y" ] ]
+        [ srl:subject [ srl:varName "y" ] ; srl:predicate :ancestorOf ; srl:object [ srl:varName "z" ] ]
+      ) ;
+      srl:head (
+        [ srl:subject [ srl:varName "x" ] ; srl:predicate :ancestorOf ; srl:object [ srl:varName "z" ] ]
+      )
+    ]
+  ) .

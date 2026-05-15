@@ -1,0 +1,7 @@
+PREFIX : <http://example/>
+
+DATA {
+  :Socrates a :Man .
+}
+
+IF { ?x a :Man } THEN { ?x a :Mortal }

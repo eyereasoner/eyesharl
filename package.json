@@ -1,0 +1,27 @@
+{
+  "name": "eyesharl",
+  "version": "0.0.1",
+  "description": "A JavaScript implementation of SHACL Rules, including SRL and RDF Rules syntax front-ends.",
+  "license": "MIT",
+  "bin": {
+    "eyesharl": "./eyesharl.js"
+  },
+  "scripts": {
+    "bundle": "node tools/bundle.js",
+    "test": "node --test test/*.test.js",
+    "pretest": "node tools/bundle.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    "LICENSE.md",
+    "README.md",
+    "HANDBOOK.md",
+    "eyesharl.js",
+    "src",
+    "tools",
+    "test",
+    "examples"
+  ]
+}

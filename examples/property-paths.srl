@@ -1,0 +1,12 @@
+PREFIX : <http://example/>
+
+DATA {
+  :alice :parentOf :bob .
+  :bob :parentOf :carol .
+}
+
+RULE { ?x :grandparentOf ?z }
+WHERE { ?x :parentOf/:parentOf ?z }
+
+RULE { ?child :hasParent ?parent }
+WHERE { ?child ^:parentOf ?parent }
