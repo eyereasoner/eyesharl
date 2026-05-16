@@ -1,0 +1,46 @@
+# Translated from eyeling/examples/family-cousins.n3
+# A small family tree derives generations, propagates branch labels,
+# and marks people in different branches but the same generation as cousins.
+
+PREFIX : <http://example/eyeling/family/>
+
+DATA {
+  :Adam :parentOf :Bob, :Carol .
+  :Bob :parentOf :Dave, :Eve .
+  :Carol :parentOf :Frank, :Grace .
+  :Dave :parentOf :Heidi .
+  :Eve :parentOf :Ivan .
+  :Frank :parentOf :Judy .
+
+  :Dave :branch :b .
+  :Eve :branch :b .
+  :Frank :branch :c .
+  :Grace :branch :c .
+
+  :b :differentFrom :c .
+  :c :differentFrom :b .
+}
+
+RULE { :Adam :generation 0 } WHERE { }
+
+RULE { ?child :generation ?next }
+WHERE {
+  ?parent :parentOf ?child .
+  ?parent :generation ?generation .
+  SET(?next := ?generation + 1)
+}
+
+RULE { ?child :branch ?branch }
+WHERE {
+  ?parent :parentOf ?child .
+  ?parent :branch ?branch .
+}
+
+RULE { ?x :cousin ?y }
+WHERE {
+  ?x :generation ?generation .
+  ?y :generation ?generation .
+  ?x :branch ?branchX .
+  ?y :branch ?branchY .
+  ?branchX :differentFrom ?branchY .
+}
