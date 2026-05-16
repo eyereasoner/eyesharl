@@ -4,9 +4,44 @@ This handbook explains Eyesharl both as JavaScript code and as a reasoning machi
 
 The chapters are meant to be read linearly. Each chapter also stands on its own, so you can jump directly to the parser, the evaluator, dependency analysis, imports, or the command-line interface when you need that part.
 
+## Contents
+
+- [1. What Eyesharl Is](#1-what-eyesharl-is)
+- [2. The Reasoning Model](#2-the-reasoning-model)
+- [3. Project Layout](#3-project-layout)
+- [4. Terms: The Atoms of the Machine](#4-terms-the-atoms-of-the-machine)
+- [5. Tokenization](#5-tokenization)
+- [6. Parsing a Rule Set](#6-parsing-a-rule-set)
+- [7. Data, Heads, and Bodies](#7-data-heads-and-bodies)
+- [8. Turtle-Style Abbreviations](#8-turtle-style-abbreviations)
+- [9. Property Paths in Bodies](#9-property-paths-in-bodies)
+- [10. Triple Storage and Matching](#10-triple-storage-and-matching)
+- [11. Expressions and Builtins](#11-expressions-and-builtins)
+- [12. Evaluating a Rule Body](#12-evaluating-a-rule-body)
+- [13. Forward Chaining](#13-forward-chaining)
+- [14. Dependency Analysis](#14-dependency-analysis)
+- [15. Stratified Evaluation](#15-stratified-evaluation)
+- [16. Assignment Rules](#16-assignment-rules)
+- [17. Imports](#17-imports)
+- [18. Static Diagnostics](#18-static-diagnostics)
+- [19. Query as an Operation](#19-query-as-an-operation)
+- [20. The CLI](#20-the-cli)
+- [21. The Public API](#21-the-public-api)
+- [22. The Bundle](#22-the-bundle)
+- [23. Tests as Executable Documentation](#23-tests-as-executable-documentation)
+- [24. Walking Through a Complete Run](#24-walking-through-a-complete-run)
+- [25. W3C Draft Examples](#25-w3c-draft-examples)
+- [26. Advanced SRL Grammar Features](#26-advanced-srl-grammar-features)
+- [27. Reifiers, Triple Terms, and Annotations](#27-reifiers-triple-terms-and-annotations)
+- [28. BuiltInCall Coverage](#28-builtincall-coverage)
+- [29. RDF Rules Syntax Front-End](#29-rdf-rules-syntax-front-end)
+- [30. Known Limitations](#30-known-limitations)
+- [31. How to Extend Eyesharl Safely](#31-how-to-extend-eyesharl-safely)
+- [32. The Big Picture](#32-the-big-picture)
+
 ## 1. What Eyesharl Is
 
-Eyesharl is a compact JavaScript implementation experiment for the Shape Rules Language, or SRL, from the SHACL 1.2 Rules draft.
+Eyesharl is a compact JavaScript implementation of the Shape Rules Language, or SRL, from the SHACL 1.2 Rules draft.
 
 A tiny Eyesharl program looks like this:
 
@@ -41,7 +76,7 @@ The main pieces are:
 9. query-as-an-operation,
 10. CLI output and bundling.
 
-Eyesharl is not a standards conformance claim. It is a learning implementation that follows the SRL draft where it implements a feature, while staying honest about missing features.
+Eyesharl is not a standards conformance claim. It follows the SRL draft where it implements a feature, while staying honest about missing features.
 
 ## 2. The Reasoning Model
 
@@ -771,39 +806,7 @@ examples/w3c/*.ttl  captured RDF/Turtle sketches from the draft
 
 The test file `test/w3c-examples.test.js` checks that all runnable W3C `.srl` examples execute through both the API and the bundled CLI.
 
-## 26. Known Limitations
-
-Eyesharl still lacks many features needed for a complete implementation:
-
-- full general-purpose RDF/Turtle parsing,
-- complete RDF-star reifier semantics beyond the rule syntax front-end,
-- complete SPARQL expression behavior,
-- remote import loading in the CLI,
-- SHACL validation integration,
-- official conformance test integration,
-- production-grade indexing and query planning.
-
-These limitations are part of the design goal. Eyesharl should remain small enough to read and modify.
-
-## 27. How to Extend Eyesharl Safely
-
-A good extension follows this path:
-
-1. Add tokens only if new characters are needed.
-2. Add parser support and choose a simple object shape.
-3. Add static checks if the feature can be unsafe.
-4. Add store or engine behavior.
-5. Add formatting only if output changes.
-6. Add API tests.
-7. Add an example if users should learn the feature from the CLI.
-8. Rebuild the bundle.
-9. Update the README only if the quick-start changes.
-10. Update this handbook when the mental model changes.
-
-Avoid pushing core behavior into the CLI. The CLI should expose the machine, not become the machine.
-
-
-## 28. Advanced SRL Grammar Features
+## 26. Advanced SRL Grammar Features
 
 The SRL grammar is not only `RULE`, `WHERE`, and simple triples. Eyesharl also supports several RDF-style term forms that make rule sets closer to the draft grammar.
 
@@ -843,7 +846,7 @@ Triple terms use the parenthesized spelling:
 
 Triple terms can appear in data and patterns. Matching is recursive, so a pattern such as `<<(?s :p ?o)>>` can bind variables inside the triple term.
 
-## 29. Reifiers, Triple Terms, and Annotations
+## 27. Reifiers, Triple Terms, and Annotations
 
 Eyesharl distinguishes triple terms from reifiers.
 
@@ -891,7 +894,7 @@ WHERE {
 
 This feature shows why Eyesharl has both parser tests and reasoning tests. It is not enough to accept the surface syntax. The parser must expand the syntax into triples that the engine can match.
 
-## 30. BuiltInCall Coverage
+## 28. BuiltInCall Coverage
 
 The SRL grammar has a production named `BuiltInCall`. Eyesharl represents that production directly in `src/builtins.js` with `BUILTIN_SIGNATURES`.
 
@@ -929,7 +932,7 @@ The missing function is part of the unchosen branch, so it is not evaluated.
 
 `examples/builtin-call-complete.srl` exercises every built-in named by the grammar. `test/builtins.test.js` compares Eyesharl's registry against the complete BuiltInCall name list and runs the example as an executable smoke test.
 
-## 31. RDF Rules Syntax Front-End
+## 29. RDF Rules Syntax Front-End
 
 Eyesharl has two front-ends for rule sets: SRL text and RDF Rules syntax in Turtle. The RDF front-end does not replace the SRL parser. It translates an RDF graph that uses the `srl:` vocabulary into the same internal program shape that the SRL parser produces.
 
@@ -998,7 +1001,7 @@ The examples in `examples/rdf-syntax/` are executable regression files. One of t
 
 This front-end is intentionally not a full SHACL validator. It can execute RDF Rules syntax rule sets, but it does not validate arbitrary RDF files against the `srl-sh:` SHACL shapes from the repository.
 
-## 32. Known Limitations
+## 30. Known Limitations
 
 Eyesharl is not a standards conformance claim. The most important remaining limitations are:
 
@@ -1007,11 +1010,11 @@ Eyesharl is not a standards conformance claim. The most important remaining limi
 - it does not implement every SPARQL expression edge case,
 - it keeps property paths deliberately restricted,
 - RDF Rules syntax support is a practical front-end rather than a full SHACL shapes validation layer,
-- performance-critical paths are indexed for common rule workloads, but this remains a compact implementation rather than a production RDF database.
+- performance-critical paths are indexed for common rule workloads, but this remains a compact implementation, not a production RDF database.
 
 The best way to read these limitations is as architectural boundaries. The rule engine derives triples. A SHACL validator checks shapes and emits validation reports. Those can be connected later, but they are different machines.
 
-## 33. How to Extend Eyesharl Safely
+## 31. How to Extend Eyesharl Safely
 
 When adding a feature, preserve the pipeline:
 
@@ -1038,7 +1041,7 @@ Useful extension directions include:
 - better diagnostics for non-well-formed rule sets,
 - more specialized indexes and query planning for larger graphs.
 
-## 34. The Big Picture
+## 32. The Big Picture
 
 Eyesharl is a Datalog-like forward reasoner over RDF-style triples.
 
